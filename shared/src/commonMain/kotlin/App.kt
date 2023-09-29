@@ -1,41 +1,76 @@
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
     MaterialTheme {
-        var greetingText by remember { mutableStateOf("Hello, World!") }
-        var showImage by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = {
-                greetingText = "Hello, ${getPlatformName()}"
-                showImage = !showImage
-            }) {
-                Text(greetingText)
-            }
-            AnimatedVisibility(showImage) {
-                Image(
-                    painterResource("compose-multiplatform.xml"),
-                    null
-                )
-            }
+        CharactersList(characters())
+    }
+}
+
+@Composable
+fun CharactersList(characters: List<Character>) {
+    LazyColumn {
+        items(characters) {
+            CharacterCard(it)
         }
     }
 }
 
-expect fun getPlatformName(): String
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun CharacterCard(character: Character) {
+    Row (Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start ) {
+        Image(
+            painter = painterResource(res = character.img),
+            contentDescription = character.name,
+            contentScale = ContentScale.Inside,
+            modifier = Modifier.height(150.dp).width(150.dp)
+            )
+        Text(character.name)
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun CharacterScreen(character: Character) {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            painter = painterResource(res = character.img),
+            contentDescription = character.name,
+            contentScale = ContentScale.Inside,
+            modifier = Modifier.height(150.dp).width(150.dp).padding(16.dp)
+        )
+        Text(text = character.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(text = character.description)
+    }
+}
+
+class HomeScreen : Screen {
+    @Composable
+    override fun Content() {
+
+    }
+
+}
