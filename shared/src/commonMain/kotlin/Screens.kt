@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,15 +16,22 @@ import cafe.adriel.voyager.core.screen.Screen
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 
-class CharactersScreen: Screen {
+class CharactersScreen(): Screen {
     @Composable
     override fun Content() {
-        CharactersList(characters())
+        val characterState by getScreenModel<CharactersScreenModel>().stateFlow.collectAsState()
+        CharactersList(characterState)
     }
 
     @Composable
@@ -38,7 +46,12 @@ class CharactersScreen: Screen {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun CharacterCard(character: Character) {
-        Row (Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start ) {
+        val navigator = LocalNavigator.currentOrThrow
+        Row (
+            Modifier.fillMaxWidth().clickable { navigator.push(CharacterScreen(character)) },
+            horizontalArrangement = Arrangement.Start
+        )
+        {
             Image(
                 painter = painterResource(res = character.img),
                 contentDescription = character.name,
@@ -60,6 +73,7 @@ data class CharacterScreen(val character: Character) : Screen {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun CharacterScreen2(character: Character) {
+        val navigator = LocalNavigator.currentOrThrow
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(res = character.img),
@@ -69,6 +83,9 @@ data class CharacterScreen(val character: Character) : Screen {
             )
             Text(text = character.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Text(text = character.description)
+            Button(onClick = {navigator.pop()}) {
+                Text("Back")
+            }
         }
     }
 }

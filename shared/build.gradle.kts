@@ -18,7 +18,9 @@ kotlin {
         }
     }
 
-    val voyagerVersion = "1.0.0-rc05"
+    val voyagerVersion = "1.0.0-rc07"
+    val koinVersion = "3.5.0"
+    val koinCompose = "1.1.0"
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -29,8 +31,10 @@ kotlin {
                 implementation(compose.components.resources)
                 // Navigator
                 implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
-                // BottomSheetNavigator
-                implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+                implementation("cafe.adriel.voyager:voyager-koin:$voyagerVersion")
+
+                implementation("io.insert-koin:koin-core:$koinVersion")
+                implementation("io.insert-koin:koin-compose:$koinCompose")
             }
         }
         val androidMain by getting {
@@ -38,8 +42,6 @@ kotlin {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
-                // Android ViewModel integration
-                implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
             }
         }
         val iosX64Main by getting

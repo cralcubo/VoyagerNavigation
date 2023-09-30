@@ -1,20 +1,18 @@
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
+import org.koin.compose.KoinApplication
 
 @Composable
 fun App() {
-    MaterialTheme {
-//        CharactersList(characters())
+    KoinApplication(application = {
+        modules(appModule())
+    }) {
+        MaterialTheme {
+            Navigator(CharactersScreen())
+        }
     }
 }
 
 
 
-class HomeScreen : Screen {
-    @Composable
-    override fun Content() {
-
-    }
-
-}
